@@ -4,6 +4,7 @@
   "description": "Testing123",
   "version": "0.1.0",
   "action": {
-    "default_popup": "peekaboo.html"
+    "default_popup": "peekaboo.html",
+    "default_icon": "icons/StickyNoteLogo_NoText.png"
   }
 }
