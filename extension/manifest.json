@@ -1,10 +1,19 @@
 {
   "manifest_version": 3,
   "name": "StickyNote",
-  "description": "Testing123",
+  "description": "Capturing Ideas, One StickyNote at a Time",
   "version": "0.1.0",
+
+
   "action": {
-    "default_popup": "peekaboo.html",
+    "default_popup": "popup.html",
     "default_icon": "icons/StickyNoteLogo_NoText.png"
-  }
+  },
+
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs"
+  ]
+
 }
