@@ -16,17 +16,19 @@ let clickNotes = () => {
   if (chrome.runtime.openOptionsPage) {
     chrome.runtime.openOptionsPage();
   } else {
-    window.open(chrome.runtime.getURL('notes.html'));
+    window.open(chrome.runtime.getURL('options.html'));
   }
 }
 
 function StickyNotePopup() {
   return (
-    <Container className="text-center m-1">
-      <Image src="icons/StickyNoteLogo.png" alt="StickyNote Logo" id="logo" className="mx-auto d-block w-75" />
-      <Button variant="secondary" className="w-100 mb-3" id="notes" onClick={clickNotes}>Created Notes</Button>
-      <Button variant="secondary" className="w-100 mb-3" id="settings" onClick={clickSettings}>Settings</Button>
-    </Container>
+      <Container className="text-center m-1">
+        <Image src="icons/StickyNoteLogo.png" alt="StickyNote Logo" id="logo" className="mx-auto d-block w-75" />
+        <Button variant="secondary" className="w-100 mb-3" id="notes" onClick={clickNotes}>Created Notes</Button>
+        <Button variant="secondary" className="w-100 mb-3" id="settings" onClick={clickSettings}>Settings</Button>
+
+      </Container>
+    
   );
 }
 

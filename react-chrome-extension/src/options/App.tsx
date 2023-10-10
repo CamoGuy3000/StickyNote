@@ -1,15 +1,29 @@
 // This app is the settings page where users can enter their info, and tweak general options about the extension
 
 import React from 'react';
-import { Container, Image } from 'react-bootstrap';
+import { Container, Image, Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
 
 function Options() {
 
-    return (
+  return (
+    <>
+    <Navbar className="bg-body-tertiary">
         <Container>
-            <Image src="icons/StickyNoteLogo.png" alt="StickyNote Logo" id="logo" className="mx-auto d-block w-75" />
+          <Navbar.Brand href="#home">
+            <img
+              alt=""
+              src="/icons/StickyNoteLogo_NoText.png"
+              width="30"
+              height="30"
+              className="d-inline-block align-top"
+            />{' '}
+            StickyNote
+          </Navbar.Brand>
         </Container>
-    );
+      </Navbar>
+    </>
+  );
 }
 
 export default Options;
