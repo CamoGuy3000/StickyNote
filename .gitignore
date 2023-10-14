@@ -1,9 +1,7 @@
 .DS_Store
 
 # Chrome Extension
-extension/*
-!extension/icons
-!extension/manifest.json
+extension/built/
 
 # Node
 # dependencies
@@ -17,6 +15,8 @@ react-chrome-extension/coverage
 # production
 build
 react-chrome-extension/build
+extension/*.js
+extension/*.txt
 
 # misc
 .DS_Store
@@ -28,3 +28,5 @@ react-chrome-extension/build
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+ToBeAdded

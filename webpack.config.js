@@ -4,6 +4,8 @@ module.exports = {
   entry: {
     popup: "./react-chrome-extension/src/popup/index.tsx",
     options: "./react-chrome-extension/src/options/index.tsx",
+    service_worker: "./extension/service_worker.tsx",
+    content: "./extension/content.tsx",
   },
   mode: "production",
   module: {
@@ -27,6 +29,6 @@ module.exports = {
   },
   output: {
     filename: "[name].js",
-    path: path.resolve(__dirname, "extension"),
+    path: path.resolve(__dirname, "extension/built"),
   },
 };
