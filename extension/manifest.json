@@ -7,9 +7,20 @@
     "default_icon" : "icons/StickyNoteLogo_NoText.png"
   },
   "options_page": "options.html",
+  "background" : {
+    "service_worker" : "built/service_worker.js",
+    "type" : "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["built/content.js"]
+    }
+  ],
   "permissions": [
     "storage",
     "scripting",
-    "activeTab"
+    "activeTab",
+    "tabs"
   ]
 }
