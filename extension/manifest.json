@@ -11,16 +11,13 @@
     "service_worker" : "built/service_worker.js",
     "type" : "module"
   },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["built/content.js"]
-    }
-  ],
+  "host_permissions": ["<all_urls>"],
+  
   "permissions": [
     "storage",
     "scripting",
     "activeTab",
-    "tabs"
+    "tabs",
+    "input"
   ]
 }
