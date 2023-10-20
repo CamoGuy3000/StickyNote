@@ -21,8 +21,23 @@ let clickSettings = () => {
 
 let createNote = () => {
 
-  chrome.runtime.sendMessage({message: "create note"})
-  
+  // chrome.runtime.sendMessage({message: "create note"})
+
+
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const currentTab = tabs[0];
+
+    // inject content.js file into the page.
+    if (!currentTab.url?.includes('chrome://')) {
+      if (currentTab?.id) {
+        chrome.scripting.executeScript({
+          target: { tabId: currentTab.id },
+          files: ['built/content.js'],
+        })
+      }
+    }
+
+  })
 
 }
 

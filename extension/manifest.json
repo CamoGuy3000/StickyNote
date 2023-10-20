@@ -7,12 +7,7 @@
     "default_icon" : "icons/StickyNoteLogo_NoText.png"
   },
   "options_page": "options.html",
-  "background" : {
-    "service_worker" : "built/service_worker.js",
-    "type" : "module"
-  },
   "host_permissions": ["<all_urls>"],
-  
   "permissions": [
     "storage",
     "scripting",
