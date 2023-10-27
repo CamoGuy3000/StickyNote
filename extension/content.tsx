@@ -5,6 +5,9 @@ let rect_list = [ ]
 // TODO send rect counter to the content file to set the rect name correctly,
 // TODO send the rectangle itself back to the popup to store it in a list
 
+// TODO turn constant values into constant variables
+// TODO maybe combine stickynote_resizing with stickynote_dragging (just have the text be what action is happening)
+
 //*Feature todos
 //-make page not scrollable when resizing
 //-make note only move from the top bar and don't ever relocate the mouse to the top of the note
@@ -42,17 +45,22 @@ rectangle.addEventListener("mousedown", e => {
   let clicked_y = e.pageY - parseInt(rectangle.style.top)
   let clicked_x = e.pageX - parseInt(rectangle.style.left)
 
-  console.log(clicked_x + ', ' + clicked_y)
-  console.log(height + ', ' + width)
+  // console.log(clicked_x + ', ' + clicked_y)
+  // console.log(height + ', ' + width)
 
-  if(clicked_x > (width - 20) && clicked_y > (height - 20)){
-    console.log("should be resizing")
-    rectangle.setAttribute('stickynote_resizing', 'true')
-  } 
-  else if(1){
-    rectangle.style.zIndex = '2'
-    rectangle.setAttribute('stickynote_dragging', 'true')
+  let resize_x = clicked_x > (width - 20)
+  let resize_y = clicked_y > (height - 20)
+  switch(true){
+    case resize_x && !resize_y:
+      rectangle.setAttribute('stickynote_resizing', 'horizontal'); break
+    case !resize_x && resize_y:
+      rectangle.setAttribute('stickynote_resizing', 'vertical'); break
+    case resize_x && resize_y:
+      rectangle.setAttribute('stickynote_resizing', 'diagonal'); break
+    case !resize_x && !resize_y:
+      rectangle.setAttribute('stickynote_dragging', 'true'); break
   }
+  
 });
 
 rectangle.addEventListener("mouseup", e => {
@@ -61,12 +69,20 @@ rectangle.addEventListener("mouseup", e => {
   rectangle.setAttribute('stickynote_resizing', 'false')
 });
 
-document.addEventListener("mousemove", e => {
+document.addEventListener("mouseup", e => {
+  if(rectangle.getAttribute('stickynote_resizing') != 'false'){
+    rectangle.style.zIndex = 'auto'
+    rectangle.setAttribute('stickynote_resizing', 'false')
+  }
+});
+
+document.addEventListener("mousemove", e => { 
+  // TODO make this not add everytime we create a note, but only the first time on the document
   if(rectangle.getAttribute('stickynote_dragging') == 'true'){
     
     let x = e.pageX
     let y = e.pageY
-
+    
     let height = parseInt(rectangle.style.height)/2
     let width = parseInt(rectangle.style.width)/2
     
@@ -77,22 +93,31 @@ document.addEventListener("mousemove", e => {
     // console.log(height + ' ' + width)
     // console.log(y + ' ' + x)
     // console.log(top + ' ' + left)
-
-    rectangle.style.top = top + "px";
-    rectangle.style.left = left + "px";
+    
+    rectangle.style.top = top + "px"
+    rectangle.style.left = left + "px"
   }
-  else if(rectangle.getAttribute('stickynote_resizing') == 'true'){
-    // return
+  else if(rectangle.getAttribute('stickynote_resizing') != 'false'){
+    let resize_type = rectangle.getAttribute('stickynote_resizing')
+
     let height = e.pageY - parseInt(rectangle.style.top)
     let width = e.pageX - parseInt(rectangle.style.left)
-    console.log(height + ' ' + width)
+    // console.log(height + ' ' + width)
     if(height < 10)
       height = 10
     if(width < 10)
       width = 10
 
-    rectangle.style.height = height + "px";
-    rectangle.style.width = width + "px";
+    switch(resize_type){
+      case 'horizontal':
+        rectangle.style.width = width + "px"; break
+      case 'vertical':
+        rectangle.style.height = height + "px"; break
+      case 'diagonal':
+        rectangle.style.height = height + "px"
+        rectangle.style.width = width + "px"
+        break
+    }
   }
 });
 
