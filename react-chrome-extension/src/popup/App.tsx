@@ -9,6 +9,10 @@ import note from './Note'
 let rect_counter = 0
 let rect_list = [ ]
 
+//- Will have to do something like this for different browsers (firefox, safari)
+// let document_listeners_created : boolean = false
+  //"later make this be booleans or each tab, saying if it 
+
 let clickSettings = () => {
   // We need to use the chrome api to open the settings page, https://developer.chrome.com/docs/extensions/reference/
   if (chrome.runtime.openOptionsPage) {

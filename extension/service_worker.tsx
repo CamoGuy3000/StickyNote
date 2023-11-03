@@ -1,5 +1,5 @@
 
-
+//! Not in use right now
 
 // console.log("Service worker started")
 
