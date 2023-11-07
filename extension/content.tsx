@@ -195,15 +195,29 @@ resize_bar_xy.addEventListener("mousedown", e => {
   rectangle.setAttribute('stickynote_resizing', 'diagonal')
 })
 pin.addEventListener("mousedown", e => {
+  let doc_bound = document.body.getBoundingClientRect()
+  let rect_bound = rectangle.getBoundingClientRect()
+  // let offset_x = rect_bound.x - doc_bound.x
+  // let offset_y = rect_bound.y - doc_bound.y
   switch(rectangle.style.position){
     case "fixed": // Is floating, make pinned
+      // console.log(rectangle.style.left + " " + rectangle.style.top)
+      // console.log(rectangle.getBoundingClientRect())
+      // console.log(document.body.getBoundingClientRect())
+      // console.log("--------")
+      
+      rectangle.style.top = rect_bound.y - doc_bound.y + "px"
+      rectangle.style.left = rect_bound.x - doc_bound.x + "px"
       rectangle.style.position = "absolute"
       pin.style.backgroundColor = "rgba(0,0,0, 0.4)"
       break
-      case "absolute": // Is pinned, make float
+    case "absolute": // Is pinned, make float
+      rectangle.style.top = rect_bound.y + "px"
+      rectangle.style.left = rect_bound.x + "px"  
+
       rectangle.style.position = "fixed"
       pin.style.backgroundColor = "rgba(255,255,255, 0.4)"
-      break
+    break
   }
 })
 
@@ -225,7 +239,7 @@ document.addEventListener("mouseup", e => {
 });
 
 document.addEventListener("mousemove", e => { 
-  console.log(e.clientX + " " + e.clientY)
+  // console.log(e.clientX + " " + e.clientY)
   // TODO make this not add everytime we create a note, but only the first time on the document
   if(rectangle.getAttribute('stickynote_dragging') == 'true'){
     window.getSelection()?.removeAllRanges()
@@ -251,7 +265,7 @@ document.addEventListener("mousemove", e => {
       height = MIN_HEIGHT
     if(width < MIN_WIDTH)
       width = MIN_WIDTH
-    console.log(height + ' ' + width)
+    // console.log(height + ' ' + width)
 
     switch(resize_type){
       case 'horizontal':
