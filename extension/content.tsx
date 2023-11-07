@@ -39,8 +39,6 @@ const rectangle = document.createElement("div");
 rectangle.id = rect_counter.toString()
 rectangle.setAttribute('stickynote_dragging', 'false')
 rectangle.setAttribute('stickynote_resizing', 'false')
-// rectangle.style.position = "absolute";
-// rectangle.style.position = "relative";
 rectangle.style.position = "fixed";
 rectangle.style.backgroundColor = normal_color;
 rectangle.style.border = "3px solid black";
@@ -105,82 +103,8 @@ rectangle.appendChild(resize_bar_y)
 rectangle.appendChild(resize_bar_xy)
 rectangle.appendChild(pin)
 
-
-
-// console.log(rectangle.classList)
-
-
-//* Adding text box to note
-// //<input type="text" id="Name" name="Name">
-// //<input type="text" value="asdf" readonly="true" ondblclick="this.readOnly='';">
-// let textbox = document.createElement("input")
-// textbox.type = 'text'
-// textbox.id = 'textbox'
-// textbox.readOnly = true
-// // textbox.setAttribute('ondblclick', 'this.readOnly=\'\'')
-// // textbox.textContent = 'testing123'
-// textbox.placeholder = 'testing123'
-// textbox.style.color = '#000000'
-
-// rectangle.appendChild(textbox)
-// let editing_text : boolean = false
-
 document.body.appendChild(rectangle);
 
-
-// rectangle.addEventListener("dblclick", e => {
-//   if(editing_text)
-//     rectangle.style.backgroundColor = editing_color
-//   else
-//     rectangle.style.backgroundColor = normal_color
-//   // textbox.readOnly = editing_text
-//   // editing_text = !editing_text
-// })
-
-// rectangle.addEventListener("mouseover", e => {
-//   console.log("want to hover")
-//   console.log()
-// })
-
-// rectangle.addEventListener("mousedown", e => {
-
-//   rectangle.style.zIndex = MOVE_Z_INDEX
-//   let height = parseInt(rectangle.style.height)
-//   let width = parseInt(rectangle.style.width)
-
-//   let top = parseInt(rectangle.style.top)
-//   let left = parseInt(rectangle.style.left)
-
-//   let clicked_y = e.pageY - top
-//   let clicked_x = e.pageX - left
-
-//   // console.log(clicked_x + ', ' + clicked_y)
-//   // console.log(height + ', ' + width)
-
-//   let resize_x = clicked_x > (width - 20)
-//   let resize_y = clicked_y > (height - 20)
-//   let pin = (clicked_x < 20) && (clicked_y < 20)
-
-//   console.log(resize_x + ", " + resize_y)
-  
-//   // console.log(pin)
-//   let style_pos = rectangle.style.position
-//   switch(true){
-//     // case pin && style_pos == 'fixed':
-//     //   rectangle.style.position = "absolute"; break
-//     // case pin && style_pos == 'absolute':
-//     //   rectangle.style.position = "fixed"; break
-//     case resize_x && !resize_y:
-//       rectangle.setAttribute('stickynote_resizing', 'horizontal'); break
-//     case !resize_x && resize_y:
-//       rectangle.setAttribute('stickynote_resizing', 'vertical'); break
-//     case resize_x && resize_y:
-//       rectangle.setAttribute('stickynote_resizing', 'diagonal'); break
-//     case !resize_x && !resize_y:
-//       rectangle.setAttribute('stickynote_dragging', 'true'); break
-//   }
-  
-// });
 
 top_bar.addEventListener("mousedown", e => {
   rectangle.setAttribute('stickynote_dragging', 'true')
@@ -197,15 +121,8 @@ resize_bar_xy.addEventListener("mousedown", e => {
 pin.addEventListener("mousedown", e => {
   let doc_bound = document.body.getBoundingClientRect()
   let rect_bound = rectangle.getBoundingClientRect()
-  // let offset_x = rect_bound.x - doc_bound.x
-  // let offset_y = rect_bound.y - doc_bound.y
   switch(rectangle.style.position){
     case "fixed": // Is floating, make pinned
-      // console.log(rectangle.style.left + " " + rectangle.style.top)
-      // console.log(rectangle.getBoundingClientRect())
-      // console.log(document.body.getBoundingClientRect())
-      // console.log("--------")
-      
       rectangle.style.top = rect_bound.y - doc_bound.y + "px"
       rectangle.style.left = rect_bound.x - doc_bound.x + "px"
       rectangle.style.position = "absolute"
@@ -260,12 +177,11 @@ document.addEventListener("mousemove", e => {
 
     let height = e.clientY - parseInt(rectangle.style.top)
     let width = e.clientX - parseInt(rectangle.style.left)
-    // console.log(e.pageY + ' ' + e.y + " " + e.clientY + " " + e.screenY)
+
     if(height < MIN_HEIGHT)
       height = MIN_HEIGHT
     if(width < MIN_WIDTH)
       width = MIN_WIDTH
-    // console.log(height + ' ' + width)
 
     switch(resize_type){
       case 'horizontal':
@@ -297,18 +213,6 @@ document.addEventListener("mousemove", e => {
     }
   }
 });
-
-// document.addEventListener("click", () => {
-//   console.log("click")
-// })
-
-// window.addEventListener('keypress',function(key){
-//   console.log(key.key)
-//   let keyvalue = key.key
-//   chrome.runtime.sendMessage(null,keyvalue,(response)=>{
-//   console.log("Sent key value"+response)
-//     })
-// })
 
 
 
