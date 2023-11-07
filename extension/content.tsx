@@ -50,38 +50,60 @@ rectangle.style.top = '200px';
 rectangle.style.height = '100px';
 rectangle.style.left = '200px';
 rectangle.style.width = '100px';
+rectangle.style.zIndex = Z_INDEX
 
 //* Adding bars to the note
+const top_bar = document.createElement("div")
+top_bar.id = rectangle.id + "_barT"
+top_bar.style.position = "absolute";
+top_bar.style.top = "0px"
+top_bar.style.left = bar_size
+top_bar.style.height = bar_size
+top_bar.style.width = (parseInt(rectangle.style.width) - 2*parseInt(bar_size)).toString() + "px"
+top_bar.style.backgroundColor = "rgba(204,230,255, 0.4)"
+
 const resize_bar_x = document.createElement("div")
 resize_bar_x.id = rectangle.id + "_barX"
-resize_bar_x.style.position = "relative";
+resize_bar_x.style.position = "absolute";
 resize_bar_x.style.top = "0px"
 resize_bar_x.style.left = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
-resize_bar_x.style.height = rectangle.style.height
+resize_bar_x.style.height = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
 resize_bar_x.style.width = bar_size
 resize_bar_x.style.backgroundColor = "rgba(204,230,255, 0.4)"
 
 const resize_bar_y = document.createElement("div")
 resize_bar_y.id = rectangle.id + "_barY"
-resize_bar_y.style.position = "relative";
-resize_bar_y.style.top = (-parseInt(bar_size)).toString() + "px"
+resize_bar_y.style.position = "absolute";
+resize_bar_y.style.top = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
 resize_bar_y.style.left = "0px"
 resize_bar_y.style.height = bar_size
-resize_bar_y.style.width = rectangle.style.width
+resize_bar_y.style.width = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
 resize_bar_y.style.backgroundColor = "rgba(204,230,255, 0.4)"
 
-const top_bar = document.createElement("div")
-top_bar.id = rectangle.id + "_barY"
-top_bar.style.position = "relative";
-top_bar.style.top = (-parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
-top_bar.style.left = "0px"
-top_bar.style.height = bar_size
-top_bar.style.width = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
-top_bar.style.backgroundColor = "rgba(204,230,255, 0.4)"
+const resize_bar_xy = document.createElement("div")
+resize_bar_xy.id = rectangle.id + "_barXY"
+resize_bar_xy.style.position = "absolute";
+resize_bar_xy.style.top = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
+resize_bar_xy.style.left = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
+resize_bar_xy.style.height = bar_size
+resize_bar_xy.style.width = bar_size
+resize_bar_xy.style.backgroundColor = "rgba(204,230,255, 0.4)"
 
+const pin = document.createElement("div")
+pin.id = rectangle.id + "_pin"
+pin.style.position = "absolute";
+pin.style.top = "0px"
+pin.style.left = "0px"
+pin.style.height = bar_size
+pin.style.width = bar_size
+pin.style.backgroundColor = "rgba(255,255,255, 0.4)"
+
+
+rectangle.appendChild(top_bar)
 rectangle.appendChild(resize_bar_x)
 rectangle.appendChild(resize_bar_y)
-rectangle.appendChild(top_bar)
+rectangle.appendChild(resize_bar_xy)
+rectangle.appendChild(pin)
 
 
 
@@ -120,45 +142,70 @@ document.body.appendChild(rectangle);
 //   console.log()
 // })
 
-rectangle.addEventListener("mousedown", e => {
+// rectangle.addEventListener("mousedown", e => {
 
-  rectangle.style.zIndex = MOVE_Z_INDEX
-  let height = parseInt(rectangle.style.height)
-  let width = parseInt(rectangle.style.width)
+//   rectangle.style.zIndex = MOVE_Z_INDEX
+//   let height = parseInt(rectangle.style.height)
+//   let width = parseInt(rectangle.style.width)
 
-  let top = parseInt(rectangle.style.top)
-  let left = parseInt(rectangle.style.left)
+//   let top = parseInt(rectangle.style.top)
+//   let left = parseInt(rectangle.style.left)
 
-  let clicked_y = e.pageY - top
-  let clicked_x = e.pageX - left
+//   let clicked_y = e.pageY - top
+//   let clicked_x = e.pageX - left
 
-  // console.log(clicked_x + ', ' + clicked_y)
-  // console.log(height + ', ' + width)
+//   // console.log(clicked_x + ', ' + clicked_y)
+//   // console.log(height + ', ' + width)
 
-  let resize_x = clicked_x > (width - 20)
-  let resize_y = clicked_y > (height - 20)
-  let pin = (clicked_x < 20) && (clicked_y < 20)
+//   let resize_x = clicked_x > (width - 20)
+//   let resize_y = clicked_y > (height - 20)
+//   let pin = (clicked_x < 20) && (clicked_y < 20)
 
-  console.log(resize_x + ", " + resize_y)
+//   console.log(resize_x + ", " + resize_y)
   
-  // console.log(pin)
-  let style_pos = rectangle.style.position
-  switch(true){
-    // case pin && style_pos == 'fixed':
-    //   rectangle.style.position = "absolute"; break
-    // case pin && style_pos == 'absolute':
-    //   rectangle.style.position = "fixed"; break
-    case resize_x && !resize_y:
-      rectangle.setAttribute('stickynote_resizing', 'horizontal'); break
-    case !resize_x && resize_y:
-      rectangle.setAttribute('stickynote_resizing', 'vertical'); break
-    case resize_x && resize_y:
-      rectangle.setAttribute('stickynote_resizing', 'diagonal'); break
-    case !resize_x && !resize_y:
-      rectangle.setAttribute('stickynote_dragging', 'true'); break
+//   // console.log(pin)
+//   let style_pos = rectangle.style.position
+//   switch(true){
+//     // case pin && style_pos == 'fixed':
+//     //   rectangle.style.position = "absolute"; break
+//     // case pin && style_pos == 'absolute':
+//     //   rectangle.style.position = "fixed"; break
+//     case resize_x && !resize_y:
+//       rectangle.setAttribute('stickynote_resizing', 'horizontal'); break
+//     case !resize_x && resize_y:
+//       rectangle.setAttribute('stickynote_resizing', 'vertical'); break
+//     case resize_x && resize_y:
+//       rectangle.setAttribute('stickynote_resizing', 'diagonal'); break
+//     case !resize_x && !resize_y:
+//       rectangle.setAttribute('stickynote_dragging', 'true'); break
+//   }
+  
+// });
+
+top_bar.addEventListener("mousedown", e => {
+  rectangle.setAttribute('stickynote_dragging', 'true')
+})
+resize_bar_x.addEventListener("mousedown", e => {
+  rectangle.setAttribute('stickynote_resizing', 'horizontal')
+})
+resize_bar_y.addEventListener("mousedown", e => {
+  rectangle.setAttribute('stickynote_resizing', 'vertical')
+})
+resize_bar_xy.addEventListener("mousedown", e => {
+  rectangle.setAttribute('stickynote_resizing', 'diagonal')
+})
+pin.addEventListener("mousedown", e => {
+  switch(rectangle.style.position){
+    case "fixed": // Is floating, make pinned
+      rectangle.style.position = "absolute"
+      pin.style.backgroundColor = "rgba(0,0,0, 0.4)"
+      break
+      case "absolute": // Is pinned, make float
+      rectangle.style.position = "fixed"
+      pin.style.backgroundColor = "rgba(255,255,255, 0.4)"
+      break
   }
-  
-});
+})
 
 rectangle.addEventListener("mouseup", e => {
   rectangle.style.zIndex = Z_INDEX
@@ -178,6 +225,7 @@ document.addEventListener("mouseup", e => {
 });
 
 document.addEventListener("mousemove", e => { 
+  console.log(e.clientX + " " + e.clientY)
   // TODO make this not add everytime we create a note, but only the first time on the document
   if(rectangle.getAttribute('stickynote_dragging') == 'true'){
     window.getSelection()?.removeAllRanges()
@@ -194,24 +242,43 @@ document.addEventListener("mousemove", e => {
     window.getSelection()?.removeAllRanges()
 
     let resize_type = rectangle.getAttribute('stickynote_resizing')
-    console.log(resize_type)
+    // console.log(resize_type)
 
-    let height = e.pageY - parseInt(rectangle.style.top)
-    let width = e.pageX - parseInt(rectangle.style.left)
-    // console.log(height + ' ' + width)
+    let height = e.clientY - parseInt(rectangle.style.top)
+    let width = e.clientX - parseInt(rectangle.style.left)
+    // console.log(e.pageY + ' ' + e.y + " " + e.clientY + " " + e.screenY)
     if(height < MIN_HEIGHT)
       height = MIN_HEIGHT
     if(width < MIN_WIDTH)
       width = MIN_WIDTH
+    console.log(height + ' ' + width)
 
     switch(resize_type){
       case 'horizontal':
-        rectangle.style.width = width + "px"; break
+        rectangle.style.width = width + "px"
+        top_bar.style.width = (parseInt(rectangle.style.width) - 2*parseInt(bar_size)).toString() + "px"
+        resize_bar_x.style.left = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
+        resize_bar_y.style.width = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
+        resize_bar_xy.style.top = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
+        resize_bar_xy.style.left = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
+        break
       case 'vertical':
-        rectangle.style.height = height + "px"; break
+        rectangle.style.height = height + "px"
+        resize_bar_x.style.height = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
+        resize_bar_y.style.top = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
+        resize_bar_xy.style.top = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
+        resize_bar_xy.style.left = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
+        break
       case 'diagonal':
         rectangle.style.height = height + "px"
         rectangle.style.width = width + "px"
+        top_bar.style.width = (parseInt(rectangle.style.width) - 2*parseInt(bar_size)).toString() + "px"
+        resize_bar_x.style.left = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
+        resize_bar_x.style.height = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
+        resize_bar_y.style.top = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
+        resize_bar_y.style.width = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
+        resize_bar_xy.style.top = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
+        resize_bar_xy.style.left = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
         break
     }
   }
