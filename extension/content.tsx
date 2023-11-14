@@ -174,41 +174,52 @@ document.addEventListener("mousemove", e => {
 
     let resize_type = rectangle.getAttribute('stickynote_resizing')
     // console.log(resize_type)
-
-    let height = e.clientY - parseInt(rectangle.style.top)
-    let width = e.clientX - parseInt(rectangle.style.left)
+    let height : number = -1
+    let width : number = -1
+    if(rectangle.style.position == "fixed"){
+      height = e.clientY - parseInt(rectangle.style.top)
+      width = e.clientX - parseInt(rectangle.style.left)
+    }
+    else{
+      height = e.pageY - parseInt(rectangle.style.top)
+      width = e.pageX - parseInt(rectangle.style.left)
+    }
 
     if(height < MIN_HEIGHT)
       height = MIN_HEIGHT
     if(width < MIN_WIDTH)
       width = MIN_WIDTH
 
+    let top_height = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
+    let top_bar_width = (parseInt(rectangle.style.width) - 2*parseInt(bar_size)).toString() + "px"
+    let left_width = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
+
     switch(resize_type){
       case 'horizontal':
         rectangle.style.width = width + "px"
-        top_bar.style.width = (parseInt(rectangle.style.width) - 2*parseInt(bar_size)).toString() + "px"
-        resize_bar_x.style.left = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
-        resize_bar_y.style.width = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
-        resize_bar_xy.style.top = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
-        resize_bar_xy.style.left = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
+        top_bar.style.width = top_bar_width
+        resize_bar_x.style.left = left_width
+        resize_bar_y.style.width = left_width
+        resize_bar_xy.style.top = top_height
+        resize_bar_xy.style.left = left_width
         break
       case 'vertical':
         rectangle.style.height = height + "px"
-        resize_bar_x.style.height = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
-        resize_bar_y.style.top = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
-        resize_bar_xy.style.top = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
-        resize_bar_xy.style.left = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
+        resize_bar_x.style.height = top_height
+        resize_bar_y.style.top = top_height
+        resize_bar_xy.style.top = top_height
+        resize_bar_xy.style.left = left_width
         break
       case 'diagonal':
         rectangle.style.height = height + "px"
         rectangle.style.width = width + "px"
-        top_bar.style.width = (parseInt(rectangle.style.width) - 2*parseInt(bar_size)).toString() + "px"
-        resize_bar_x.style.left = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
-        resize_bar_x.style.height = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
-        resize_bar_y.style.top = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
-        resize_bar_y.style.width = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
-        resize_bar_xy.style.top = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
-        resize_bar_xy.style.left = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
+        top_bar.style.width = top_bar_width
+        resize_bar_x.style.left = left_width
+        resize_bar_x.style.height = top_height
+        resize_bar_y.style.top = top_height
+        resize_bar_y.style.width = left_width
+        resize_bar_xy.style.top = top_height
+        resize_bar_xy.style.left = left_width
         break
     }
   }
