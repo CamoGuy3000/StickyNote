@@ -4,6 +4,7 @@ import { getEventListeners } from "events"
 let rect_counter = 0
 let rect_list = [ ]
 
+// TODO change cursor icon when hovering over resize bars (and pin maybe)
 // TODO send rect counter to the content file to set the rect name correctly,
 // TODO send the rectangle itself back to the popup to store it in a list
 
@@ -32,28 +33,28 @@ let editing_color = "rgba(204,255,255, 0.7)"
 
 console.log("Content script started")
 
-const rectangle = document.createElement("div");
+const rectangle = document.createElement("div")
 
 //* Creating basic note
 // rectangle.id = rect_list.length.toString()
 rectangle.id = rect_counter.toString()
 rectangle.setAttribute('stickynote_dragging', 'false')
 rectangle.setAttribute('stickynote_resizing', 'false')
-rectangle.style.position = "fixed";
-rectangle.style.backgroundColor = normal_color;
-rectangle.style.border = "3px solid black";
+rectangle.style.position = "fixed"
+rectangle.style.backgroundColor = normal_color
+rectangle.style.border = "3px solid black"
 // rectangle.style.borderRadius = '5%'
 //"Bring back when I redisign resizing (needs to not break if the mouse is off of the stickynote)
-rectangle.style.top = '200px';
-rectangle.style.height = '100px';
-rectangle.style.left = '200px';
-rectangle.style.width = '100px';
+rectangle.style.top = '200px'
+rectangle.style.height = '100px'
+rectangle.style.left = '200px'
+rectangle.style.width = '100px'
 rectangle.style.zIndex = Z_INDEX
 
 //* Adding bars to the note
 const top_bar = document.createElement("div")
 top_bar.id = rectangle.id + "_barT"
-top_bar.style.position = "absolute";
+top_bar.style.position = "absolute"
 top_bar.style.top = "0px"
 top_bar.style.left = bar_size
 top_bar.style.height = bar_size
@@ -62,16 +63,16 @@ top_bar.style.backgroundColor = "rgba(204,230,255, 0.4)"
 
 const resize_bar_x = document.createElement("div")
 resize_bar_x.id = rectangle.id + "_barX"
-resize_bar_x.style.position = "absolute";
-resize_bar_x.style.top = "0px"
+resize_bar_x.style.position = "absolute"
+resize_bar_x.style.top = bar_size
 resize_bar_x.style.left = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
-resize_bar_x.style.height = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
+resize_bar_x.style.height = (parseInt(rectangle.style.height) - 2*parseInt(bar_size)).toString() + "px"
 resize_bar_x.style.width = bar_size
 resize_bar_x.style.backgroundColor = "rgba(204,230,255, 0.4)"
 
 const resize_bar_y = document.createElement("div")
 resize_bar_y.id = rectangle.id + "_barY"
-resize_bar_y.style.position = "absolute";
+resize_bar_y.style.position = "absolute"
 resize_bar_y.style.top = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
 resize_bar_y.style.left = "0px"
 resize_bar_y.style.height = bar_size
@@ -80,7 +81,7 @@ resize_bar_y.style.backgroundColor = "rgba(204,230,255, 0.4)"
 
 const resize_bar_xy = document.createElement("div")
 resize_bar_xy.id = rectangle.id + "_barXY"
-resize_bar_xy.style.position = "absolute";
+resize_bar_xy.style.position = "absolute"
 resize_bar_xy.style.top = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
 resize_bar_xy.style.left = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
 resize_bar_xy.style.height = bar_size
@@ -89,19 +90,44 @@ resize_bar_xy.style.backgroundColor = "rgba(204,230,255, 0.4)"
 
 const pin = document.createElement("div")
 pin.id = rectangle.id + "_pin"
-pin.style.position = "absolute";
+pin.style.position = "absolute"
 pin.style.top = "0px"
 pin.style.left = "0px"
 pin.style.height = bar_size
 pin.style.width = bar_size
 pin.style.backgroundColor = "rgba(255,255,255, 0.4)"
 
+const remove = document.createElement("div")
+remove.id = rectangle.id + "_remove"
+remove.style.position = "absolute"
+remove.style.top = "0px"
+remove.style.left = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
+remove.style.height = bar_size
+remove.style.width = bar_size
+remove.style.backgroundColor = "red"
+remove.style.opacity = "0.4"
+
+const text = document.createElement("textarea")
+text.id = rectangle.id + "_text"
+text.style.position = "absolute"
+text.style.resize = "none"
+text.style.border = "0 none"
+text.style.outline = "none"
+text.style.overflow = "hidden"
+text.style.color = "black"
+text.style.background = "transparent"
+text.style.top = bar_size
+text.style.left = "0px"
+text.style.width = (parseInt(rectangle.style.width) - 2*parseInt(bar_size)+4).toString() + "px"
+text.style.height = (parseInt(rectangle.style.height) - 2*parseInt(bar_size)-4).toString() + "px"
 
 rectangle.appendChild(top_bar)
 rectangle.appendChild(resize_bar_x)
 rectangle.appendChild(resize_bar_y)
 rectangle.appendChild(resize_bar_xy)
 rectangle.appendChild(pin)
+rectangle.appendChild(remove)
+rectangle.appendChild(text)
 
 document.body.appendChild(rectangle);
 
@@ -123,19 +149,23 @@ pin.addEventListener("mousedown", e => {
   let rect_bound = rectangle.getBoundingClientRect()
   switch(rectangle.style.position){
     case "fixed": // Is floating, make pinned
-      rectangle.style.top = rect_bound.y - doc_bound.y + "px"
-      rectangle.style.left = rect_bound.x - doc_bound.x + "px"
-      rectangle.style.position = "absolute"
-      pin.style.backgroundColor = "rgba(0,0,0, 0.4)"
+    rectangle.style.top = rect_bound.y - doc_bound.y + "px"
+    rectangle.style.left = rect_bound.x - doc_bound.x + "px"
+    rectangle.style.position = "absolute"
+    pin.style.backgroundColor = "rgba(0,0,0, 0.4)"
       break
-    case "absolute": // Is pinned, make float
+      case "absolute": // Is pinned, make float
       rectangle.style.top = rect_bound.y + "px"
       rectangle.style.left = rect_bound.x + "px"  
-
+      
       rectangle.style.position = "fixed"
       pin.style.backgroundColor = "rgba(255,255,255, 0.4)"
-    break
-  }
+      break
+    }
+  })
+remove.addEventListener("click", e => {
+  console.log("REMOVING " + rectangle.id)
+  rectangle.remove()
 })
 
 rectangle.addEventListener("mouseup", e => {
@@ -193,34 +223,42 @@ document.addEventListener("mousemove", e => {
     let top_height = (parseInt(rectangle.style.height) - parseInt(bar_size)).toString() + "px"
     let top_bar_width = (parseInt(rectangle.style.width) - 2*parseInt(bar_size)).toString() + "px"
     let left_width = (parseInt(rectangle.style.width) - parseInt(bar_size)).toString() + "px"
+    let text_width = (parseInt(rectangle.style.width) - 2*parseInt(bar_size)+4).toString() + "px"
+    let text_height = (parseInt(rectangle.style.height) - 2*parseInt(bar_size)-4).toString() + "px"
 
     switch(resize_type){
-      case 'horizontal':
-        rectangle.style.width = width + "px"
-        top_bar.style.width = top_bar_width
-        resize_bar_x.style.left = left_width
-        resize_bar_y.style.width = left_width
-        resize_bar_xy.style.top = top_height
-        resize_bar_xy.style.left = left_width
-        break
-      case 'vertical':
-        rectangle.style.height = height + "px"
-        resize_bar_x.style.height = top_height
-        resize_bar_y.style.top = top_height
-        resize_bar_xy.style.top = top_height
-        resize_bar_xy.style.left = left_width
-        break
-      case 'diagonal':
-        rectangle.style.height = height + "px"
-        rectangle.style.width = width + "px"
-        top_bar.style.width = top_bar_width
-        resize_bar_x.style.left = left_width
-        resize_bar_x.style.height = top_height
-        resize_bar_y.style.top = top_height
-        resize_bar_y.style.width = left_width
-        resize_bar_xy.style.top = top_height
-        resize_bar_xy.style.left = left_width
-        break
+    case 'horizontal':
+      rectangle.style.width = width + "px"
+      top_bar.style.width = top_bar_width
+      resize_bar_x.style.left = left_width
+      resize_bar_y.style.width = left_width
+      resize_bar_xy.style.top = top_height
+      resize_bar_xy.style.left = left_width
+      text.style.width = text_width
+      remove.style.left = left_width
+      break
+    case 'vertical':
+      rectangle.style.height = height + "px"
+      resize_bar_x.style.height = top_height
+      resize_bar_y.style.top = top_height
+      resize_bar_xy.style.top = top_height
+      resize_bar_xy.style.left = left_width
+      text.style.height = text_height
+      break
+    case 'diagonal':
+      rectangle.style.height = height + "px"
+      rectangle.style.width = width + "px"
+      top_bar.style.width = top_bar_width
+      resize_bar_x.style.left = left_width
+      resize_bar_x.style.height = top_height
+      resize_bar_y.style.top = top_height
+      resize_bar_y.style.width = left_width
+      resize_bar_xy.style.top = top_height
+      resize_bar_xy.style.left = left_width
+      text.style.width = text_width
+      text.style.height = text_height
+      remove.style.left = left_width
+      break
     }
   }
 });
